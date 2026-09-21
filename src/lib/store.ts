@@ -25,8 +25,7 @@ export type DashboardView =
   | "ad-writer"
   | "fb-library"
   | "erp"
-  | "order-invoice" // NEW: WhatsApp-style order → invoice
-  | "deliverables"; // NEW: repo + package deliverables
+  | "order-invoice"; // NEW: WhatsApp-style order → invoice (our own ERP feature)
 
 export type ClientPlan = "manage" | "manage-content";
 export type ErpStatus = "active" | "pending" | "inactive";

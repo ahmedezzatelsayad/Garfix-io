@@ -35,6 +35,7 @@ const SEED_CLIENTS: Client[] = [
     plan: "manage-content",
     monthlyBudget: 25000,
     erpStatus: "active",
+    erpUrl: "https://ahmed.garfix-erp.app",
     createdAt: "2026-08-12",
   },
   {
@@ -47,6 +48,7 @@ const SEED_CLIENTS: Client[] = [
     plan: "manage",
     monthlyBudget: 12000,
     erpStatus: "active",
+    erpUrl: "https://sara.garfix-erp.app",
     createdAt: "2026-08-25",
   },
   {
@@ -59,6 +61,7 @@ const SEED_CLIENTS: Client[] = [
     plan: "manage-content",
     monthlyBudget: 50000,
     erpStatus: "pending",
+    erpUrl: "",
     createdAt: "2026-09-02",
   },
   {
@@ -71,12 +74,14 @@ const SEED_CLIENTS: Client[] = [
     plan: "manage",
     monthlyBudget: 8000,
     erpStatus: "inactive",
+    erpUrl: "",
     createdAt: "2026-09-10",
   },
 ];
 
 export function FounderView() {
   const t = useDict();
+  const locale = useApp((s) => s.locale);
   const setView = useApp((s) => s.setView);
   const clients = useApp((s) => s.clients);
   const addClient = useApp((s) => s.addClient);
@@ -88,6 +93,8 @@ export function FounderView() {
   const [query, setQuery] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingErpUrl, setEditingErpUrl] = useState<string | null>(null);
+  const [erpUrlDraft, setErpUrlDraft] = useState("");
 
   // Seed on first mount if no clients
   useEffect(() => {
@@ -140,6 +147,31 @@ export function FounderView() {
           ? t.founder.activate
           : t.founder.deactivate,
       description: c.name,
+    });
+  };
+
+  const startEditErpUrl = (c: Client) => {
+    setEditingErpUrl(c.id);
+    setErpUrlDraft(c.erpUrl || "");
+  };
+
+  const cancelEditErpUrl = () => {
+    setEditingErpUrl(null);
+    setErpUrlDraft("");
+  };
+
+  const saveErpUrl = (c: Client) => {
+    const url = erpUrlDraft.trim();
+    updateClient(c.id, { erpUrl: url });
+    // Auto-activate ERP if a URL is set and status was inactive
+    if (url && c.erpStatus === "inactive") {
+      updateClient(c.id, { erpStatus: "active" });
+    }
+    setEditingErpUrl(null);
+    setErpUrlDraft("");
+    toast({
+      title: t.dash.erp.openInNewTab,
+      description: url || "—",
     });
   };
 
@@ -263,8 +295,56 @@ export function FounderView() {
                           {t.pricing.calc.currency}
                         </span>
                       </td>
-                      <td className="px-4 py-3">
-                        <ErpBadge status={c.erpStatus} t={t} />
+                      <td className="px-4 py-3 min-w-[200px]">
+                        <div className="space-y-2">
+                          <ErpBadge status={c.erpStatus} t={t} />
+                          {editingErpUrl === c.id ? (
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="url"
+                                dir="ltr"
+                                value={erpUrlDraft}
+                                onChange={(e) => setErpUrlDraft(e.target.value)}
+                                placeholder="https://client.garfix-erp.app"
+                                className="w-full rounded-md border border-[#2563EB] px-2 py-1 text-[10px] font-mono focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15"
+                                autoFocus
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") saveErpUrl(c);
+                                  if (e.key === "Escape") cancelEditErpUrl();
+                                }}
+                              />
+                              <button
+                                onClick={() => saveErpUrl(c)}
+                                className="rounded-md bg-[#2563EB] p-1 text-white hover:bg-[#1E40AF] flex-shrink-0"
+                                aria-label="Save"
+                              >
+                                <Check className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={cancelEditErpUrl}
+                                className="rounded-md bg-slate-100 p-1 text-slate-600 hover:bg-slate-200 flex-shrink-0"
+                                aria-label="Cancel"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => startEditErpUrl(c)}
+                              className="block w-full text-start rounded-md border border-dashed border-[#CBD5E1] bg-[#F8FAFC] px-2 py-1 font-mono text-[10px] text-[#475569] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors truncate"
+                              dir="ltr"
+                              title={c.erpUrl || t.dash.erp.inactiveDesc}
+                            >
+                              {c.erpUrl ? (
+                                c.erpUrl
+                              ) : (
+                                <span className="text-[#94A3B8] not-italic">
+                                  {locale === "ar" ? "+ أضف لينك ERP" : "+ Add ERP URL"}
+                                </span>
+                              )}
+                            </button>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <button
@@ -445,6 +525,7 @@ function AddClientDialog({
       plan,
       monthlyBudget: budget,
       erpStatus: "pending",
+      erpUrl: "",
       createdAt: new Date().toISOString().slice(0, 10),
     });
   };

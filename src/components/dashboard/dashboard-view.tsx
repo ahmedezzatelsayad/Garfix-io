@@ -12,6 +12,7 @@ import {
   X,
   Shield,
   Globe,
+  Receipt,
 } from "lucide-react";
 import { GarfixLogo } from "@/components/site/logo";
 import { useApp, useDict } from "@/lib/store";
@@ -21,12 +22,14 @@ import { LandingBuilder } from "./landing-builder";
 import { AdWriter } from "./ad-writer";
 import { FbLibrary } from "./fb-library";
 import { ErpLink } from "./erp-link";
+import { OrderInvoice } from "./order-invoice";
 
 const NAV = [
   { key: "overview", icon: LayoutDashboard },
   { key: "landing", icon: FileText },
   { key: "ads", icon: PenLine },
   { key: "library", icon: Search },
+  { key: "order-invoice", icon: Receipt },
   { key: "erp", icon: Boxes },
 ] as const;
 
@@ -167,6 +170,7 @@ export function DashboardView() {
           {dashboardView === "landing" && <LandingBuilder />}
           {dashboardView === "ads" && <AdWriter />}
           {dashboardView === "library" && <FbLibrary />}
+          {dashboardView === "order-invoice" && <OrderInvoice />}
           {dashboardView === "erp" && <ErpLink />}
         </main>
       </div>

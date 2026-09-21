@@ -3,17 +3,23 @@
 import { Facebook, Instagram, Mail, MessageCircle, Lock } from "lucide-react";
 import { GarfixLogo } from "./logo";
 import { useApp, useDict } from "@/lib/store";
+import type { View } from "@/lib/store";
 
 export function Footer() {
   const t = useDict();
   const setView = useApp((s) => s.setView);
+
+  const goTo = (v: View) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setView(v);
+  };
 
   return (
     <footer className="bg-[#0F172A] text-white mt-auto">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid gap-10 lg:grid-cols-12">
           {/* Brand column */}
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-4">
             <div className="flex items-center gap-2">
               <GarfixLogo variant="full" className="[&_span]:text-white" />
             </div>
@@ -27,40 +33,37 @@ export function Footer() {
             </div>
 
             <div className="mt-6 flex items-center gap-3">
-              <SocialIcon href="https://facebook.com" label="Facebook">
-                <Facebook className="h-4 w-4" />
-              </SocialIcon>
-              <SocialIcon href="https://instagram.com" label="Instagram">
-                <Instagram className="h-4 w-4" />
-              </SocialIcon>
-              <SocialIcon href="mailto:hello@garfix.io" label="Email">
-                <Mail className="h-4 w-4" />
-              </SocialIcon>
-              <SocialIcon href="https://wa.me/201000000000" label="WhatsApp">
-                <MessageCircle className="h-4 w-4" />
-              </SocialIcon>
+              <SocialIcon href="https://facebook.com" label="Facebook"><Facebook className="h-4 w-4" /></SocialIcon>
+              <SocialIcon href="https://instagram.com" label="Instagram"><Instagram className="h-4 w-4" /></SocialIcon>
+              <SocialIcon href="mailto:hello@garfix.io" label="Email"><Mail className="h-4 w-4" /></SocialIcon>
+              <SocialIcon href="https://wa.me/201000000000" label="WhatsApp"><MessageCircle className="h-4 w-4" /></SocialIcon>
             </div>
           </div>
 
           {/* Link columns */}
-          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
-            <FooterColumn
-              title={t.nav.services}
-              links={t.services.items.map((s) => s.title)}
-            />
-            <FooterColumn
-              title={t.nav.how}
-              links={[
-                t.how.eyebrow,
-                t.pricing.eyebrow,
-                t.governance.eyebrow,
-                t.nav.contact,
-              ]}
-            />
-            <FooterColumn
-              title={t.nav.contact}
-              links={["Facebook", "Instagram", "WhatsApp", "Email"]}
-            />
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
+            <FooterColumn title={t.footer.sections.services}>
+              <FooterLink onClick={goTo("services-detail")}>{t.footer.links.servicesDetail}</FooterLink>
+              <FooterLink onClick={goTo("pricing-detail")}>{t.footer.links.pricingDetail}</FooterLink>
+              <FooterLink onClick={goTo("how-detail")}>{t.footer.links.howDetail}</FooterLink>
+            </FooterColumn>
+
+            <FooterColumn title={t.footer.sections.company}>
+              <FooterLink onClick={goTo("about")}>{t.footer.links.about}</FooterLink>
+              <FooterLink onClick={goTo("contact")}>{t.footer.links.contact}</FooterLink>
+              <FooterLink onClick={goTo("founder")}>{t.footer.links.founder}</FooterLink>
+            </FooterColumn>
+
+            <FooterColumn title={t.footer.sections.legal}>
+              <FooterLink onClick={goTo("privacy")}>{t.footer.links.privacy}</FooterLink>
+              <FooterLink onClick={goTo("terms")}>{t.footer.links.terms}</FooterLink>
+            </FooterColumn>
+
+            <FooterColumn title={t.footer.sections.resources}>
+              <FooterLink onClick={goTo("about")}>{t.footer.links.about}</FooterLink>
+              <FooterLink onClick={goTo("contact")}>{t.footer.links.contact}</FooterLink>
+              <FooterLink onClick={goTo("founder")}>{t.footer.links.founder}</FooterLink>
+            </FooterColumn>
           </div>
         </div>
 
@@ -69,7 +72,7 @@ export function Footer() {
           <div className="flex items-center gap-4 flex-wrap">
             <p className="text-xs text-white/50">{t.footer.rights}</p>
             <button
-              onClick={() => setView("founder")}
+              onClick={goTo("founder")}
               className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-[#A3E635] transition-colors"
               aria-label={t.footer.founderHint}
             >
@@ -86,23 +89,26 @@ export function Footer() {
   );
 }
 
-function FooterColumn({ title, links }: { title: string; links: readonly string[] }) {
+function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
       <h3 className="font-display text-sm font-bold text-white mb-3">{title}</h3>
-      <ul className="space-y-2.5">
-        {links.map((l, li) => (
-          <li key={li}>
-            <a
-              href="#"
-              className="text-sm text-white/60 hover:text-white transition-colors"
-            >
-              {l}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <ul className="space-y-2.5">{children}</ul>
     </div>
+  );
+}
+
+function FooterLink({ onClick, children }: { onClick: (e: React.MouseEvent) => void; children: React.ReactNode }) {
+  return (
+    <li>
+      <a
+        href="#"
+        onClick={onClick}
+        className="text-sm text-white/60 hover:text-white transition-colors"
+      >
+        {children}
+      </a>
+    </li>
   );
 }
 

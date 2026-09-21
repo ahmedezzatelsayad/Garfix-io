@@ -6,11 +6,8 @@ import {
   Clock,
   XCircle,
   ExternalLink,
-  ArrowUpRight,
-  ShoppingCart,
-  Package,
-  Users,
-  BarChart3,
+  Link2,
+  AlertCircle,
 } from "lucide-react";
 import { useApp, useDict } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -23,6 +20,7 @@ export function ErpLink() {
 
   if (!user) return null;
   const status = user.erpStatus;
+  const erpUrl = user.erpUrl || "";
 
   const statusInfo = {
     active: {
@@ -52,17 +50,19 @@ export function ErpLink() {
   }[status];
 
   const openErp = () => {
-    // In a real deployment, this would route to the separate ERP site with SSO token.
-    // For this demo, we open a placeholder URL in a new tab and toast.
+    if (!erpUrl) {
+      toast({
+        title: t.dash.erp.status.inactive,
+        description: t.dash.erp.inactiveDesc,
+        variant: "destructive",
+      });
+      return;
+    }
     toast({
       title: t.dash.erp.openInNewTab,
-      description: "garfix-erp.example.com",
+      description: erpUrl,
     });
-    window.open(
-      `https://garfix-erp.example.com/?token=${user.id}&email=${encodeURIComponent(user.email)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
+    window.open(erpUrl, "_blank", "noopener,noreferrer");
   };
 
   const requestErp = () => {
@@ -73,11 +73,11 @@ export function ErpLink() {
   };
 
   const features = [
-    { icon: ShoppingCart, label: t.dash.erp.features[0] },
-    { icon: Package, label: t.dash.erp.features[1] },
-    { icon: BarChart3, label: t.dash.erp.features[2] },
-    { icon: Users, label: t.dash.erp.features[3] },
-    { icon: ArrowUpRight, label: t.dash.erp.features[4] },
+    { icon: ExternalLink, label: t.dash.erp.features[0] },
+    { icon: Boxes, label: t.dash.erp.features[1] },
+    { icon: CheckCircle2, label: t.dash.erp.features[2] },
+    { icon: Link2, label: t.dash.erp.features[3] },
+    { icon: AlertCircle, label: t.dash.erp.features[4] },
   ];
 
   return (
@@ -131,6 +131,7 @@ export function ErpLink() {
                     ? "bg-[#2563EB] text-white shadow-[#2563EB]/25 hover:bg-[#1E40AF]"
                     : "bg-[#0F172A] text-white shadow-[#0F172A]/20 hover:bg-[#1E293B]"
                 )}
+                disabled={!erpUrl && statusInfo.actionAvailable}
               >
                 {statusInfo.actionAvailable && <ExternalLink className="h-4 w-4" />}
                 {statusInfo.actionLabel}
@@ -138,12 +139,22 @@ export function ErpLink() {
             </div>
           </div>
 
-          {/* ERP URL preview */}
+          {/* ERP URL display */}
           <div className="relative mt-6 pt-5 border-t border-[#E2E8F0]">
             <p className="text-[10px] text-[#64748B] mb-1">ERP URL</p>
-            <div className="rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] px-3 py-2 font-mono text-xs text-[#475569] truncate" dir="ltr">
-              garfix-erp.example.com/?token=••••
-            </div>
+            {erpUrl ? (
+              <div
+                className="rounded-lg bg-[#F8FAFC] border border-[#E2E8F0] px-3 py-2 font-mono text-xs text-[#475569] truncate"
+                dir="ltr"
+              >
+                {erpUrl}
+              </div>
+            ) : (
+              <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-700 flex items-center gap-2">
+                <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                {t.dash.erp.inactiveDesc}
+              </div>
+            )}
           </div>
         </div>
 
