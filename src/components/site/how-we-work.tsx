@@ -1,6 +1,6 @@
 "use client";
 
-import { useDict } from "@/lib/locale-store";
+import { useDict } from "@/lib/store";
 
 export function HowWeWork() {
   const t = useDict();

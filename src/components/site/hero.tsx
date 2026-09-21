@@ -1,11 +1,12 @@
 "use client";
 
 import { ArrowRight, ArrowLeft, Sparkles, ShieldCheck, Zap } from "lucide-react";
-import { useLocale, useDict } from "@/lib/locale-store";
+import { useApp, useDict } from "@/lib/store";
 import { GarfixLogo } from "./logo";
 
 export function Hero() {
-  const locale = useLocale((s) => s.locale);
+  const locale = useApp((s) => s.locale);
+  const setView = useApp((s) => s.setView);
   const t = useDict();
   const Arrow = locale === "ar" ? ArrowLeft : ArrowRight;
 
@@ -13,6 +14,8 @@ export function Hero() {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
+
+  const primaryCta = () => setView("login");
 
   return (
     <section
@@ -58,7 +61,7 @@ export function Hero() {
             {/* CTAs */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <button
-                onClick={() => scrollTo("cta")}
+                onClick={primaryCta}
                 className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#2563EB] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#2563EB]/25 hover:bg-[#1E40AF] transition-colors"
               >
                 {t.hero.primaryCta}

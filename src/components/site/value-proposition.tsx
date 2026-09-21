@@ -1,7 +1,7 @@
 "use client";
 
 import { Building2, Boxes, ShieldCheck, Palette } from "lucide-react";
-import { useDict } from "@/lib/locale-store";
+import { useDict } from "@/lib/store";
 
 const ICONS = [Building2, Boxes, ShieldCheck, Palette];
 

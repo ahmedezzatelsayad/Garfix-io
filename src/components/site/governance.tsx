@@ -1,7 +1,7 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
-import { useDict } from "@/lib/locale-store";
+import { useDict } from "@/lib/store";
 
 export function Governance() {
   const t = useDict();
@@ -62,14 +62,12 @@ export function Governance() {
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                <a
-                  href="https://wa.me/201000000000"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => setView("login")}
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0F172A] shadow-lg hover:bg-white/90 transition-colors"
                 >
                   {t.cta.button}
-                </a>
+                </button>
                 <a
                   href="mailto:hello@garfix.io"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white hover:bg-white/20 transition-colors"

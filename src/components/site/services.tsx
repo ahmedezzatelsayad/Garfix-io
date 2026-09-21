@@ -8,7 +8,7 @@ import {
   Check,
   Gift,
 } from "lucide-react";
-import { useDict } from "@/lib/locale-store";
+import { useDict } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const ICONS = [Megaphone, PenTool, LayoutDashboard, Store];

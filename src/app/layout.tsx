@@ -1,6 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata } from "metadata";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Plus_Jakarta_Sans, Inter, Tajawal, IBM_Plex_Sans_Arabic } from "next/font/google";
+import {
+  Plus_Jakarta_Sans,
+  Inter,
+  Tajawal,
+  IBM_Plex_Sans_Arabic,
+  Readex_Pro,
+} from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { LocaleProvider } from "@/components/site/locale-provider";
@@ -27,6 +33,14 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
 });
 
+// Primary modern Arabic font
+const readexPro = Readex_Pro({
+  variable: "--font-readex-pro",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
 const tajawal = Tajawal({
   variable: "--font-tajawal",
   subsets: ["arabic", "latin"],
@@ -42,32 +56,29 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
 export const metadata: Metadata = {
   title: "Garfix.io — Grow. Manage. Scale.",
   description:
-    "Garfix.io is a digital world that combines an advertising agency with a smart platform to manage advertising campaigns, sales, inventory, and operations — with free ERP for clients committed to monthly advertising.",
+    "منصة Garfix.io — أعلن بذكاء، أنشئ لاندنج بيج، اكتب إعلاناتك، ابحث في Facebook Ads Library، وأدر شغلك من Garfix ERP. كل ده في مكان واحد.",
   keywords: [
     "Garfix",
     "Garfix.io",
-    "advertising agency",
+    "وكالة إعلانات",
     "ERP",
-    "campaign management",
-    "Facebook ads",
-    "Instagram ads",
-    "digital marketing",
-    "ووكالة إعلانات",
     "إدارة الحملات الإعلانية",
-    "ERP مجاني",
+    "بناء لاندنج بيج",
+    "Facebook Ads Library",
+    "كتابة الإعلانات",
   ],
   authors: [{ name: "Garfix.io" }],
   openGraph: {
     title: "Garfix.io — Grow. Manage. Scale.",
     description:
-      "Smart advertising agency + free ERP for committed clients. Manage Facebook & Instagram campaigns, sales, inventory, and operations in one place.",
+      "منصة واحدة لإدارة إعلاناتك وبناء لاندنج بيج وكتابة الإعلانات والوصول لـ Garfix ERP.",
     siteName: "Garfix.io",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Garfix.io — Grow. Manage. Scale.",
-    description: "Smart advertising agency + free ERP for committed clients.",
+    description: "منصة واحدة لإدارة إعلاناتك وبناء لاندنج بيج والوصول لـ Garfix ERP.",
   },
 };
 
@@ -79,7 +90,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${plusJakarta.variable} ${inter.variable} ${tajawal.variable} ${ibmPlexArabic.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} ${plusJakarta.variable} ${inter.variable} ${readexPro.variable} ${tajawal.variable} ${ibmPlexArabic.variable} antialiased bg-background text-foreground`}
       >
         <LocaleProvider>{children}</LocaleProvider>
         <Toaster />

@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, Globe } from "lucide-react";
+import { Menu, X, Globe, LogIn } from "lucide-react";
 import { GarfixLogo } from "./logo";
-import { useLocale, useDict } from "@/lib/locale-store";
+import { useApp, useDict } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 const NAV_KEYS = ["home", "services", "pricing", "how", "contact"] as const;
@@ -11,8 +11,9 @@ const NAV_KEYS = ["home", "services", "pricing", "how", "contact"] as const;
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const locale = useLocale((s) => s.locale);
-  const toggle = useLocale((s) => s.toggle);
+  const locale = useApp((s) => s.locale);
+  const toggle = useApp((s) => s.toggle);
+  const setView = useApp((s) => s.setView);
   const t = useDict();
 
   useEffect(() => {
@@ -40,7 +41,6 @@ export function Header() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
           <a
             href="#home"
             onClick={(e) => handleAnchor(e, "home")}
@@ -50,7 +50,6 @@ export function Header() {
             <GarfixLogo />
           </a>
 
-          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1" aria-label="Primary">
             {NAV_KEYS.map((key) => (
               <a
@@ -64,7 +63,6 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Right actions */}
           <div className="flex items-center gap-2">
             <button
               onClick={toggle}
@@ -75,6 +73,14 @@ export function Header() {
               <span>{t.switchTo}</span>
             </button>
 
+            <button
+              onClick={() => setView("login")}
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-medium text-[#0F172A] hover:border-[#2563EB] hover:text-[#2563EB] transition-colors"
+            >
+              <LogIn className="h-4 w-4" />
+              <span>{t.nav.login}</span>
+            </button>
+
             <a
               href="#cta"
               onClick={(e) => handleAnchor(e, "cta")}
@@ -83,7 +89,6 @@ export function Header() {
               {t.nav.cta}
             </a>
 
-            {/* Mobile menu button */}
             <button
               className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-[#0F172A] hover:bg-[#F8FAFC]"
               onClick={() => setMobileOpen((v) => !v)}
@@ -96,7 +101,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
       {mobileOpen && (
         <div className="md:hidden border-t border-[#E2E8F0] bg-white">
           <nav className="mx-auto max-w-7xl px-4 py-3 flex flex-col gap-1" aria-label="Mobile">
@@ -110,6 +114,16 @@ export function Header() {
                 {t.nav[key]}
               </a>
             ))}
+            <button
+              onClick={() => {
+                setMobileOpen(false);
+                setView("login");
+              }}
+              className="rounded-lg px-3 py-2.5 text-base font-medium text-[#0F172A] hover:bg-[#F8FAFC] flex items-center gap-2"
+            >
+              <LogIn className="h-4 w-4" />
+              {t.nav.login}
+            </button>
             <a
               href="#cta"
               onClick={(e) => handleAnchor(e, "cta")}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Calculator, Gift, Lightbulb, Info } from "lucide-react";
-import { useDict } from "@/lib/locale-store";
+import { useDict } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 type Plan = "manage" | "manage-content";

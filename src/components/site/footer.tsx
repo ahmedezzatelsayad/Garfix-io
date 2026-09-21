@@ -1,11 +1,12 @@
 "use client";
 
-import { Facebook, Instagram, Mail, MessageCircle } from "lucide-react";
+import { Facebook, Instagram, Mail, MessageCircle, Lock } from "lucide-react";
 import { GarfixLogo } from "./logo";
-import { useDict } from "@/lib/locale-store";
+import { useApp, useDict } from "@/lib/store";
 
 export function Footer() {
   const t = useDict();
+  const setView = useApp((s) => s.setView);
 
   return (
     <footer className="bg-[#0F172A] text-white mt-auto">
@@ -14,10 +15,7 @@ export function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-5">
             <div className="flex items-center gap-2">
-              <GarfixLogo
-                variant="full"
-                className="[&_span]:text-white"
-              />
+              <GarfixLogo variant="full" className="[&_span]:text-white" />
             </div>
             <p className="mt-4 text-sm leading-relaxed text-white/65 max-w-md">
               {t.footer.desc}
@@ -46,37 +44,65 @@ export function Footer() {
 
           {/* Link columns */}
           <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
-            {t.footer.sections.map((section, si) => (
-              <div key={si}>
-                <h3 className="font-display text-sm font-bold text-white mb-3">
-                  {section.title}
-                </h3>
-                <ul className="space-y-2.5">
-                  {section.links.map((l, li) => (
-                    <li key={li}>
-                      <a
-                        href="#"
-                        className="text-sm text-white/60 hover:text-white transition-colors"
-                      >
-                        {l}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <FooterColumn
+              title={t.nav.services}
+              links={t.services.items.map((s) => s.title)}
+            />
+            <FooterColumn
+              title={t.nav.how}
+              links={[
+                t.how.eyebrow,
+                t.pricing.eyebrow,
+                t.governance.eyebrow,
+                t.nav.contact,
+              ]}
+            />
+            <FooterColumn
+              title={t.nav.contact}
+              links={["Facebook", "Instagram", "WhatsApp", "Email"]}
+            />
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-xs text-white/50">{t.footer.rights}</p>
+          <div className="flex items-center gap-4 flex-wrap">
+            <p className="text-xs text-white/50">{t.footer.rights}</p>
+            <button
+              onClick={() => setView("founder")}
+              className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-[#A3E635] transition-colors"
+              aria-label={t.footer.founderHint}
+            >
+              <Lock className="h-3 w-3" />
+              {t.footer.founderHint}
+            </button>
+          </div>
           <p className="font-display text-sm font-bold tracking-tight text-white/80">
             {t.footer.tagline}
           </p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({ title, links }: { title: string; links: readonly string[] }) {
+  return (
+    <div>
+      <h3 className="font-display text-sm font-bold text-white mb-3">{title}</h3>
+      <ul className="space-y-2.5">
+        {links.map((l, li) => (
+          <li key={li}>
+            <a
+              href="#"
+              className="text-sm text-white/60 hover:text-white transition-colors"
+            >
+              {l}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
