@@ -52,3 +52,10 @@ prompt
 server.log
 # Skills directory
 /skills/
+# Large screenshots & uploads (not needed in repo)
+scripts/*.png
+scripts/*.jpg
+scripts/*.jpeg
+upload/
+download/
+worklog.md
