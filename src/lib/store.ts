@@ -5,13 +5,28 @@ import { persist } from "zustand/middleware";
 import type { Locale } from "./i18n";
 import { dict, defaultLocale } from "./i18n";
 
-export type View = "marketing" | "login" | "dashboard" | "founder";
+export type View =
+  | "marketing"
+  | "login"
+  | "dashboard"
+  | "founder"
+  // Footer pages
+  | "about"
+  | "contact"
+  | "privacy"
+  | "terms"
+  | "services-detail"
+  | "pricing-detail"
+  | "how-detail";
+
 export type DashboardView =
   | "overview"
   | "landing-builder"
   | "ad-writer"
   | "fb-library"
-  | "erp";
+  | "erp"
+  | "order-invoice" // NEW: WhatsApp-style order → invoice
+  | "deliverables"; // NEW: repo + package deliverables
 
 export type ClientPlan = "manage" | "manage-content";
 export type ErpStatus = "active" | "pending" | "inactive";
@@ -26,6 +41,7 @@ export type Client = {
   plan: ClientPlan;
   monthlyBudget: number;
   erpStatus: ErpStatus;
+  erpUrl: string; // NEW: per-client custom ERP URL (set by founder)
   createdAt: string;
 };
 
@@ -37,6 +53,25 @@ type SessionUser = {
   plan: ClientPlan;
   monthlyBudget: number;
   erpStatus: ErpStatus;
+  erpUrl: string;
+};
+
+export type InvoiceItem = {
+  id: string;
+  name: string;
+  qty: number;
+  price: number;
+};
+
+export type Invoice = {
+  id: string;
+  clientId: string;
+  customerName: string;
+  customerPhone: string;
+  items: InvoiceItem[];
+  notes: string;
+  status: "draft" | "sent" | "paid";
+  createdAt: string;
 };
 
 type AppState = {
@@ -58,6 +93,12 @@ type AppState = {
   addClient: (c: Client) => void;
   addClients: (cs: Client[]) => void;
   updateClient: (id: string, patch: Partial<Client>) => void;
+
+  // NEW: invoices per client (keyed by client id)
+  invoices: Record<string, Invoice[]>;
+  addInvoice: (clientId: string, invoice: Invoice) => void;
+  updateInvoice: (clientId: string, invoiceId: string, patch: Partial<Invoice>) => void;
+  deleteInvoice: (clientId: string, invoiceId: string) => void;
 };
 
 export const useApp = create<AppState>()(
@@ -81,6 +122,7 @@ export const useApp = create<AppState>()(
             plan: client.plan,
             monthlyBudget: client.monthlyBudget,
             erpStatus: client.erpStatus,
+            erpUrl: client.erpUrl,
           },
           view: "dashboard",
           dashboardView: "overview",
@@ -101,12 +143,42 @@ export const useApp = create<AppState>()(
             c.id === id ? { ...c, ...patch } : c
           ),
         })),
+
+      invoices: {},
+      addInvoice: (clientId, invoice) =>
+        set((s) => ({
+          invoices: {
+            ...s.invoices,
+            [clientId]: [invoice, ...(s.invoices[clientId] || [])],
+          },
+        })),
+      updateInvoice: (clientId, invoiceId, patch) =>
+        set((s) => ({
+          invoices: {
+            ...s.invoices,
+            [clientId]: (s.invoices[clientId] || []).map((inv) =>
+              inv.id === invoiceId ? { ...inv, ...patch } : inv
+            ),
+          },
+        })),
+      deleteInvoice: (clientId, invoiceId) =>
+        set((s) => ({
+          invoices: {
+            ...s.invoices,
+            [clientId]: (s.invoices[clientId] || []).filter(
+              (inv) => inv.id !== invoiceId
+            ),
+          },
+        })),
     }),
     {
       name: "garfix-app",
-      // Only persist locale + clients. Session (user/view) is in-memory only
-      // so that loginAs / setView apply immediately without rehydration race.
-      partialize: (s) => ({ locale: s.locale, clients: s.clients }),
+      // Only persist locale + clients + invoices. Session is in-memory only.
+      partialize: (s) => ({
+        locale: s.locale,
+        clients: s.clients,
+        invoices: s.invoices,
+      }),
     }
   )
 );
