@@ -5,6 +5,8 @@ import { Sparkles, Copy, Check, RefreshCw, Megaphone } from "lucide-react";
 import { useApp, useDict } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { BrandKit } from "./brand-kit";
+import { HashtagGenerator } from "./hashtag-generator";
 
 type Platform = "fb" | "ig" | "both";
 type Tone = "pro" | "friendly" | "urgent";
@@ -209,6 +211,12 @@ export function AdWriter() {
             })
           )}
         </div>
+      </div>
+
+      {/* NEW: Brand Kit + Hashtag Generator side-by-side */}
+      <div className="grid lg:grid-cols-2 gap-4">
+        <BrandKit />
+        <HashtagGenerator />
       </div>
     </div>
   );

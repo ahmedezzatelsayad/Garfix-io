@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { useApp, useDict } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { OnboardingChecklist } from "./onboarding-checklist";
+import { ActivityFeed } from "./activity-feed";
+import { PerformanceCharts } from "./performance-charts";
 
 export function Overview({
   rate,
@@ -171,10 +174,16 @@ export function Overview({
         </div>
       </div>
 
-      {/* Empty hint */}
-      <div className="rounded-2xl border border-dashed border-[#CBD5E1] bg-white/50 p-6 text-center">
-        <p className="text-sm text-[#64748B]">{t.dash.overview.empty}</p>
+      {/* NEW: Performance Charts + Activity Feed side-by-side */}
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <PerformanceCharts />
+        </div>
+        <ActivityFeed />
       </div>
+
+      {/* NEW: Onboarding Checklist */}
+      <OnboardingChecklist />
     </div>
   );
 }

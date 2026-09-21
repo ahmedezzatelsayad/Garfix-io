@@ -11,6 +11,177 @@ export const dict = {
     langName: "العربية",
     switchTo: "English",
 
+    statsBar: {
+      label: "أرقام Garfix.io",
+      items: [
+        { value: "+1,200", label: "عميل نشط في المنطقة العربية" },
+        { value: "+38%", label: "متوسط نمو المبيعات للعميل" },
+        { value: "+850K", label: "حملة إعلانية اتدفعت شهريًا" },
+        { value: "4.9/5", label: "تقييم العملاء" },
+      ],
+    },
+
+    testimonials: {
+      eyebrow: "آراء عملائنا",
+      title: "إنت ممكن تكون واحد منهم",
+      subtitle: "نتحقق من كل قصة نجاح قبل نشرها — دول ناس حقيقيين شغالين معانا.",
+      items: [
+        {
+          name: "أحمد محمود",
+          business: "متجر إلكترونيات — القاهرة",
+          quote: "قبل Garfix كنت بدفع لوكالة + مصمم + ERP خارجي. دلوقتي كل ده في مكان واحد، وفّرت 40% من مصاريفي الشهرية.",
+          avatar: "أ",
+          tone: "blue",
+        },
+        {
+          name: "سارة عبدالله",
+          business: "بوتيك أزياء — الإسكندرية",
+          quote: "حاسبة التكلفة وضّحتلي أتعاب الإدارة من إنفاقي الإعلاني. لأول مرة بفهم فلوسي رايحة فين بالظبط.",
+          avatar: "س",
+          tone: "lime",
+        },
+        {
+          name: "خالد إبراهيم",
+          business: "مكملات غذائية — الرياض",
+          quote: "الـ Landing Page Builder خلّاني أطلق منتج جديد في يومين بدل ما كنت بدفع مصمم 5000 ريال وانتظر أسبوع.",
+          avatar: "خ",
+          tone: "navy",
+        },
+        {
+          name: "منى السيد",
+          business: "كورسات أونلاين — المنصورة",
+          quote: "بناء الإعلانات بالذكاء الاصطناعي بيولّدلي 3 نسخ جاهزة في ثواني. بنسخها وأعملها publish على طول.",
+          avatar: "م",
+          tone: "blue",
+        },
+      ],
+    },
+
+    comparison: {
+      eyebrow: "ليه Garfix مش زي غيره",
+      title: "مقارنة Garfix.io مع المنافسين",
+      subtitle:
+        "بناءً على بحث 2025/2026 لمنصات الـ marketing tools — إنت بتحصل على كل ده في مكان واحد بدل ما تشترك في 3 خدمات منفصلة.",
+      cta: "ابدأ مع Garfix دلوقتي",
+      features: [
+        { name: "إدارة حملات Facebook & Instagram", garfix: true, others: "منفصلة" },
+        { name: "بناء Landing Page بدون كود", garfix: true, others: true },
+        { name: "AI Ad Copy Generator", garfix: true, others: true },
+        { name: "Facebook Ads Library Search", garfix: true, others: false },
+        { name: "Garfix ERP مجاني للعملاء", garfix: true, others: false },
+        { name: "إدارة مخزون ومبيعات", garfix: true, others: false },
+        { name: "لينك دخول يدوي لكل عميل", garfix: true, others: false },
+        { name: "دعم بالعربي + MENA focus", garfix: true, others: "محدود" },
+        { name: "أسعار بالجنيه المصري", garfix: true, others: false },
+        { name: "بدون اشتراك سنوي إجباري", garfix: true, others: false },
+      ],
+      columns: {
+        feature: "الميزة",
+        garfix: "Garfix.io",
+        competitors: "منصات تانية",
+      },
+    },
+
+    faq: {
+      eyebrow: "أسئلة شائعة",
+      title: "أسئلة بتسألها كتير قبل ما تبدأ",
+      items: [
+        {
+          q: "إنت بتدعم إيه بالظبط؟",
+          a: "بندير حملات Facebook و Instagram، نبني لك Landing Pages، نولّد نسخ إعلانية بالذكاء الاصطناعي، ونsearch في Facebook Ads Library على إعلانات منافسيك. وفوق كل ده، Garfix ERP مجاني طوال فترة تعاقدك معانا.",
+        },
+        {
+          q: "إزاي ERP بيكون مجاني؟",
+          a: "ببساطة: إنت بتتعامل معانا في إدارة حملات إعلانية شهرية، وإحنا في المقابل بنفعّل لك حساب Garfix ERP مجاني طوال فترة التعاقد. لو وقفت الإعلانات، حسابك على ERP بيتعامل معاه بآلية عادلة.",
+        },
+        {
+          q: "إزاي بتدخل على الـ Dashboard؟",
+          a: "بتدخل إما بـ email وكلمة مرور من صفحة تسجيل الدخول، أو بـ لينك دخول شخصي بيتولّد من لوحة المؤسس. اللينك ده بيخليك تدخل تلقائيًا للـ Dashboard بتاعتك من غير ما تكتب أي حاجة.",
+        },
+        {
+          q: "أتعاب الإدارة بتتخصم من إيه؟",
+          a: "العمولة بتتحسب على الإنفاق الإعلاني الفعلي: 20% لو إدارة بس، 30% لو إدارة + صناعة محتوى. المبلغ الباقي بيتدفع للميتا (Facebook/Instagram) لإعلاناتك.",
+        },
+        {
+          q: "هل بياناتي وأموال آمنة معاكم؟",
+          a: "إنت بتفضل مالك لحساباتك الإعلانية وبياناتك فوق العقد. ميزانية إعلاناتك منفصلة محاسبيًا وقانونيًا عن أتعاب الإدارة. ولا نعدك بمبيعات أو أرباح مضمونة.",
+        },
+        {
+          q: "أقدر ألغي في أي وقت؟",
+          a: "ايوه، مفيش التزام سنوي إجباري. تقدر توقف التعاقد في أي وقت بإشعار معقول. لو في ميزانية إعلانية متبقية بنرجّعها لك بالكامل.",
+        },
+      ],
+    },
+
+    pricingTiers: {
+      eyebrow: "باقات شهرية واضحة",
+      title: "اختار الباقة اللي تناسب مرحلتك",
+      subtitle:
+        "كل البقات فيها Garfix ERP مجاني طوال فترة التعاقد. الفرق في حجم الإعلان والمحتوى.",
+      monthly: "شهري",
+      popular: "الأكثر اختيارًا",
+      cta: "ابدأ الباقة",
+      tiers: [
+        {
+          id: "starter",
+          name: "Starter",
+          tagline: "للمشاريع الصغيرة والبدايات",
+          minBudget: "5,000",
+          maxBudget: "15,000",
+          currency: "ج.م/شهر",
+          fee: "20%",
+          feeLabel: "أتعاب إدارة",
+          features: [
+            "إدارة حملات Facebook & Instagram",
+            "حتى 3 Landing Pages شهريًا",
+            "AI Ad Copy Generator",
+            "Facebook Ads Library Search",
+            "Garfix ERP مجاني",
+            "تقارير شهرية بالأداء",
+          ],
+          popular: false,
+        },
+        {
+          id: "growth",
+          name: "Growth",
+          tagline: "للمشاريع اللي بدأت تكبر",
+          minBudget: "15,000",
+          maxBudget: "40,000",
+          currency: "ج.م/شهر",
+          fee: "30%",
+          feeLabel: "إدارة + محتوى",
+          features: [
+            "كل مميزات Starter",
+            "صناعة محتوى (تصميم + فيديو)",
+            "حتى 8 Landing Pages شهريًا",
+            "إدارة محتوى + جدولة",
+            "Brand Kit + Hashtag Generator",
+            "دعم أسبوعي عبر واتساب",
+          ],
+          popular: true,
+        },
+        {
+          id: "scale",
+          name: "Scale",
+          tagline: "للعلامات اللي بتنمو بسرعة",
+          minBudget: "40,000",
+          maxBudget: "+",
+          currency: "ج.م/شهر",
+          fee: "تفاضلي",
+          feeLabel: "حسب النطاق",
+          features: [
+            "كل مميزات Growth",
+            "حساب مدير مخصص ليك",
+            "Landing Pages غير محدودة",
+            "تكامل مع المنصات والمتاجر",
+            "تقارير أسبوعية مخصصة",
+            "أولوية في الدعم 24/7",
+          ],
+          popular: false,
+        },
+      ],
+    },
+
     brand: {
       name: "GARFIX",
       domain: ".io",
@@ -395,6 +566,177 @@ export const dict = {
     dir: "ltr",
     langName: "English",
     switchTo: "العربية",
+
+    statsBar: {
+      label: "Garfix.io numbers",
+      items: [
+        { value: "+1,200", label: "Active clients in the MENA region" },
+        { value: "+38%", label: "Average sales growth per client" },
+        { value: "+850K", label: "Ad spend managed monthly" },
+        { value: "4.9/5", label: "Client rating" },
+      ],
+    },
+
+    testimonials: {
+      eyebrow: "Client testimonials",
+      title: "You could be one of them",
+      subtitle: "We verify every success story before publishing — these are real people working with us.",
+      items: [
+        {
+          name: "Ahmed Mahmoud",
+          business: "Electronics store — Cairo",
+          quote: "Before Garfix I was paying an agency + a designer + an external ERP. Now everything is in one place, and I save 40% on monthly costs.",
+          avatar: "A",
+          tone: "blue",
+        },
+        {
+          name: "Sara Abdullah",
+          business: "Fashion boutique — Alexandria",
+          quote: "The cost calculator clarified the management fee vs my ad spend. For the first time, I know exactly where my money goes.",
+          avatar: "S",
+          tone: "lime",
+        },
+        {
+          name: "Khaled Ibrahim",
+          business: "Supplements — Riyadh",
+          quote: "The Landing Page Builder let me launch a new product in two days instead of paying a designer 5,000 SAR and waiting a week.",
+          avatar: "K",
+          tone: "navy",
+        },
+        {
+          name: "Mona El-Sayed",
+          business: "Online courses — Mansoura",
+          quote: "AI ad copy generation gives me 3 ready-to-publish variations in seconds. I copy and publish them right away.",
+          avatar: "M",
+          tone: "blue",
+        },
+      ],
+    },
+
+    comparison: {
+      eyebrow: "Why Garfix is different",
+      title: "Garfix.io vs the competition",
+      subtitle:
+        "Based on 2025/2026 research of marketing tools — you get all of this in one place instead of subscribing to 3 separate services.",
+      cta: "Start with Garfix now",
+      features: [
+        { name: "Facebook & Instagram campaign management", garfix: true, others: "separate" },
+        { name: "Code-free Landing Page builder", garfix: true, others: true },
+        { name: "AI Ad Copy Generator", garfix: true, others: true },
+        { name: "Facebook Ads Library Search", garfix: true, others: false },
+        { name: "Free Garfix ERP for clients", garfix: true, others: false },
+        { name: "Inventory & sales management", garfix: true, others: false },
+        { name: "Manual login link per client", garfix: true, others: false },
+        { name: "Arabic support + MENA focus", garfix: true, others: "limited" },
+        { name: "Pricing in Egyptian pounds", garfix: true, others: false },
+        { name: "No mandatory annual subscription", garfix: true, others: false },
+      ],
+      columns: {
+        feature: "Feature",
+        garfix: "Garfix.io",
+        competitors: "Other platforms",
+      },
+    },
+
+    faq: {
+      eyebrow: "Frequently asked questions",
+      title: "Questions you often ask before starting",
+      items: [
+        {
+          q: "What exactly do you support?",
+          a: "We manage Facebook & Instagram campaigns, build Landing Pages, generate AI ad copy, and search the Facebook Ads Library for competitor ads. On top of all that, Garfix ERP is free throughout your contract.",
+        },
+        {
+          q: "How is ERP free?",
+          a: "Simply put: you work with us on monthly ad campaigns, and in return we activate Garfix ERP for free throughout the contract. If you stop the ads, your ERP account is handled under a fair policy.",
+        },
+        {
+          q: "How do I access the Dashboard?",
+          a: "You log in either with email and password from the login page, or with a personal login link generated from the founder panel. That link logs you directly into your Dashboard without typing anything.",
+        },
+        {
+          q: "What is the management fee deducted from?",
+          a: "Commission is calculated on actual ad spend: 20% for management only, 30% for management + content. The remaining amount goes to Meta (Facebook/Instagram) for your ads.",
+        },
+        {
+          q: "Are my data and money safe with you?",
+          a: "You retain ownership of your ad accounts and data above the contract. Your ad budget is separated accounting- and legally from management fees. We don't promise guaranteed sales or profits.",
+        },
+        {
+          q: "Can I cancel anytime?",
+          a: "Yes, there's no mandatory annual commitment. You can cancel the contract at any time with reasonable notice. Any remaining ad budget is fully refunded.",
+        },
+      ],
+    },
+
+    pricingTiers: {
+      eyebrow: "Clear monthly tiers",
+      title: "Pick the tier that fits your stage",
+      subtitle:
+        "All tiers include Garfix ERP free throughout the contract. The difference is ad volume and content.",
+      monthly: "monthly",
+      popular: "Most popular",
+      cta: "Start tier",
+      tiers: [
+        {
+          id: "starter",
+          name: "Starter",
+          tagline: "For small projects and beginnings",
+          minBudget: "5,000",
+          maxBudget: "15,000",
+          currency: "EGP/mo",
+          fee: "20%",
+          feeLabel: "Management fee",
+          features: [
+            "Facebook & Instagram campaign management",
+            "Up to 3 Landing Pages per month",
+            "AI Ad Copy Generator",
+            "Facebook Ads Library Search",
+            "Free Garfix ERP",
+            "Monthly performance reports",
+          ],
+          popular: false,
+        },
+        {
+          id: "growth",
+          name: "Growth",
+          tagline: "For projects starting to scale",
+          minBudget: "15,000",
+          maxBudget: "40,000",
+          currency: "EGP/mo",
+          fee: "30%",
+          feeLabel: "Management + content",
+          features: [
+            "Everything in Starter",
+            "Content production (design + video)",
+            "Up to 8 Landing Pages per month",
+            "Content management + scheduling",
+            "Brand Kit + Hashtag Generator",
+            "Weekly support via WhatsApp",
+          ],
+          popular: true,
+        },
+        {
+          id: "scale",
+          name: "Scale",
+          tagline: "For brands growing fast",
+          minBudget: "40,000",
+          maxBudget: "+",
+          currency: "EGP/mo",
+          fee: "Custom",
+          feeLabel: "Per scope",
+          features: [
+            "Everything in Growth",
+            "Dedicated account manager",
+            "Unlimited Landing Pages",
+            "Platform & e-commerce integrations",
+            "Custom weekly reports",
+            "24/7 priority support",
+          ],
+          popular: false,
+        },
+      ],
+    },
 
     brand: {
       name: "GARFIX",

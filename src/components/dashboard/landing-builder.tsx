@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Save, Eye, Sparkles } from "lucide-react";
+import { Save, Eye, Sparkles, Smartphone, Monitor } from "lucide-react";
 import { useDict } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 type FormData = {
   product: string;
@@ -14,6 +15,8 @@ type FormData = {
   price: string;
   currency: string;
 };
+
+type PreviewMode = "desktop" | "mobile";
 
 const initial: FormData = {
   product: "",
@@ -29,6 +32,7 @@ export function LandingBuilder() {
   const t = useDict();
   const { toast } = useToast();
   const [data, setData] = useState<FormData>(initial);
+  const [mode, setMode] = useState<PreviewMode>("desktop");
 
   const features = data.features
     .split("\n")
@@ -141,80 +145,131 @@ export function LandingBuilder() {
 
         {/* Live preview */}
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#64748B] uppercase tracking-wide">
-            <Eye className="h-3.5 w-3.5" />
-            {t.dash.landing.preview}
-          </div>
-
-          <div className="rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden shadow-sm">
-            {/* Preview header */}
-            <div className="h-8 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center px-3 gap-1.5">
-              <div className="h-2 w-2 rounded-full bg-red-400" />
-              <div className="h-2 w-2 rounded-full bg-amber-400" />
-              <div className="h-2 w-2 rounded-full bg-green-400" />
-              <div className="ms-2 text-[10px] text-[#94A3B8]">preview</div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-semibold text-[#64748B] uppercase tracking-wide">
+              <Eye className="h-3.5 w-3.5" />
+              {t.dash.landing.preview}
             </div>
 
-            {/* Preview body */}
-            {data.product || data.headline ? (
-              <div className="p-6">
-                {/* Product image placeholder */}
-                <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-[#EFF6FF] via-[#F8FAFC] to-[#A3E635]/10 flex items-center justify-center mb-5">
-                  <div className="text-center">
-                    <Sparkles className="h-8 w-8 mx-auto text-[#2563EB]" />
-                    <p className="mt-2 text-[10px] text-[#64748B]">placeholder</p>
+            {/* NEW: Desktop/Mobile preview toggle */}
+            <div className="inline-flex rounded-lg border border-[#E2E8F0] p-0.5 bg-white">
+              <button
+                onClick={() => setMode("desktop")}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all",
+                  mode === "desktop"
+                    ? "bg-[#2563EB]/10 text-[#2563EB]"
+                    : "text-[#64748B] hover:text-[#0F172A]"
+                )}
+                aria-label="Desktop preview"
+              >
+                <Monitor className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">
+                  {t.dash.sidebar.overview === "Overview" ? "Desktop" : "سطح المكتب"}
+                </span>
+              </button>
+              <button
+                onClick={() => setMode("mobile")}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all",
+                  mode === "mobile"
+                    ? "bg-[#2563EB]/10 text-[#2563EB]"
+                    : "text-[#64748B] hover:text-[#0F172A]"
+                )}
+                aria-label="Mobile preview"
+              >
+                <Smartphone className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">
+                  {t.dash.sidebar.overview === "Overview" ? "Mobile" : "موبايل"}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              "mx-auto transition-all duration-300",
+              mode === "mobile" ? "max-w-[320px]" : "max-w-full"
+            )}
+          >
+            <div className="rounded-2xl border border-[#E2E8F0] bg-white overflow-hidden shadow-sm">
+              {/* Preview header */}
+              <div className="h-8 bg-[#F8FAFC] border-b border-[#E2E8F0] flex items-center px-3 gap-1.5">
+                <div className="h-2 w-2 rounded-full bg-red-400" />
+                <div className="h-2 w-2 rounded-full bg-amber-400" />
+                <div className="h-2 w-2 rounded-full bg-green-400" />
+                <div className="ms-2 text-[10px] text-[#94A3B8]">
+                  {mode === "mobile" ? "mobile preview" : "desktop preview"}
+                </div>
+              </div>
+
+              {/* Preview body */}
+              {data.product || data.headline ? (
+                <div className={cn(
+                  "p-6",
+                  mode === "mobile" && "p-4"
+                )}>
+                  {/* Product image placeholder */}
+                  <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-[#EFF6FF] via-[#F8FAFC] to-[#A3E635]/10 flex items-center justify-center mb-5">
+                    <div className="text-center">
+                      <Sparkles className="h-8 w-8 mx-auto text-[#2563EB]" />
+                      <p className="mt-2 text-[10px] text-[#64748B]">placeholder</p>
+                    </div>
+                  </div>
+
+                  {data.product && (
+                    <p className="text-xs text-[#2563EB] font-semibold uppercase tracking-wide">
+                      {data.product}
+                    </p>
+                  )}
+                  {data.headline && (
+                    <h3 className={cn(
+                      "mt-2 font-display font-extrabold text-[#0F172A] leading-tight",
+                      mode === "mobile" ? "text-lg" : "text-xl"
+                    )}>
+                      {data.headline}
+                    </h3>
+                  )}
+                  {data.subheadline && (
+                    <p className="mt-2 text-sm text-[#475569] leading-relaxed">
+                      {data.subheadline}
+                    </p>
+                  )}
+
+                  {features.length > 0 && (
+                    <ul className="mt-4 space-y-2">
+                      {features.map((f, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-[#0F172A]">
+                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#A3E635] flex-shrink-0" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <div className="mt-5 flex items-center justify-between pt-4 border-t border-[#E2E8F0]">
+                    {data.price && (
+                      <div>
+                        <span className="text-2xl font-extrabold text-[#0F172A] tabular">
+                          {data.price}
+                        </span>
+                        <span className="text-sm text-[#64748B] ms-1">
+                          {data.currency}
+                        </span>
+                      </div>
+                    )}
+                    <button className="ms-auto inline-flex items-center rounded-full bg-[#2563EB] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#2563EB]/25 hover:bg-[#1E40AF] transition-colors">
+                      {data.cta || t.dash.landing.ctaPh}
+                    </button>
                   </div>
                 </div>
-
-                {data.product && (
-                  <p className="text-xs text-[#2563EB] font-semibold uppercase tracking-wide">
-                    {data.product}
-                  </p>
-                )}
-                {data.headline && (
-                  <h3 className="mt-2 font-display text-xl font-extrabold text-[#0F172A] leading-tight">
-                    {data.headline}
-                  </h3>
-                )}
-                {data.subheadline && (
-                  <p className="mt-2 text-sm text-[#475569] leading-relaxed">
-                    {data.subheadline}
-                  </p>
-                )}
-
-                {features.length > 0 && (
-                  <ul className="mt-4 space-y-2">
-                    {features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-[#0F172A]">
-                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#A3E635] flex-shrink-0" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                <div className="mt-5 flex items-center justify-between pt-4 border-t border-[#E2E8F0]">
-                  {data.price && (
-                    <div>
-                      <span className="text-2xl font-extrabold text-[#0F172A] tabular">
-                        {data.price}
-                      </span>
-                      <span className="text-sm text-[#64748B] ms-1">
-                        {data.currency}
-                      </span>
-                    </div>
-                  )}
-                  <button className="ms-auto inline-flex items-center rounded-full bg-[#2563EB] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[#2563EB]/25 hover:bg-[#1E40AF] transition-colors">
-                    {data.cta || t.dash.landing.ctaPh}
-                  </button>
+              ) : (
+                <div className="p-12 text-center">
+                  <Sparkles className="h-10 w-10 mx-auto text-[#CBD5E1]" />
+                  <p className="mt-3 text-sm text-[#64748B]">{t.dash.landing.empty}</p>
                 </div>
-              </div>
-            ) : (
-              <div className="p-12 text-center">
-                <Sparkles className="h-10 w-10 mx-auto text-[#CBD5E1]" />
-                <p className="mt-3 text-sm text-[#64748B]">{t.dash.landing.empty}</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
