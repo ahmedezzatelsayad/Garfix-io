@@ -74,7 +74,7 @@ The result: many invoices, many teams, disconnected data. Garfix.io solves this 
 
 ### Client Dashboard (per user)
 - **Overview** with KPIs (budget, agency fee, ad spend, ERP status), Performance Charts (Area chart for spend + Bar chart for conversions, toggleable), Activity Feed (live indicator), and Onboarding Checklist (interactive, 5 steps with progress bar)
-- **Landing Page Builder** — form-based editor with live preview, mobile/desktop preview toggle
+- **Landing Page Builder** — form-based editor with live preview, mobile/desktop preview toggle, **AI generation powered by DeepSeek** (generates headline, subheadline, features, CTA, and price from a product brief)
 - **Ad Writer** — AI-powered 3 ad copy generator + Brand Kit (4 color palettes + custom color pickers) + Hashtag Generator (15 hashtags from one keyword)
 - **Facebook Ads Library Search** — search competitor ads with country/platform filters + direct link to Facebook's real Ads Library
 - **Order → Invoice** (the strongest ERP feature) — WhatsApp-style message parser that extracts products, quantities, and prices from natural language, converts to a full invoice with draft/sent/paid statuses
@@ -176,7 +176,11 @@ Garfix-io/
 │   │   ├── layout.tsx               # Root layout (fonts, LocaleProvider)
 │   │   ├── page.tsx                 # View router (state-based)
 │   │   ├── globals.css              # Tailwind + brand tokens + utilities
-│   │   └── api/                     # API routes (extensible)
+│   │   └── api/
+│   │       ├── route.ts             # Health check
+│   │       └── landing/
+│   │           └── generate/
+│   │               └── route.ts      # DeepSeek-powered AI landing page generator
 │   ├── components/
 │   │   ├── ui/                      # shadcn/ui primitives (40+ components)
 │   │   ├── site/                    # Marketing site components
@@ -290,25 +294,51 @@ bun run start
 
 ## 🔐 Environment Variables
 
-Create a `.env` file in the project root. Currently, the app runs fully client-side, so env vars are minimal. Add them as needed:
+Create a `.env` file in the project root (see `.env.example` for a template):
 
 ```env
-# Optional: Prisma database URL (if you enable persistence)
+# Required: Database URL (SQLite by default — switch to PostgreSQL for production)
 DATABASE_URL="file:./prisma/dev.db"
 
-# Optional: NextAuth.js (if you enable real auth)
+# Recommended: DeepSeek API key — enables real AI generation in Landing Page Builder
+# When unset, the API falls back to a deterministic template generator.
+# Get your key from: https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY=""
+
+# Optional: NextAuth.js (for real authentication upgrade)
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-here"
 
-# Optional: Real Facebook Marketing API (for live ad management)
+# Optional: Facebook Marketing API (for live ad management)
 FB_ACCESS_TOKEN=""
 FB_AD_ACCOUNT_ID=""
-
-# Optional: Real OpenAI / z-ai-web-dev-sdk (for AI ad copy generation)
-ZAI_API_KEY=""
 ```
 
-> The current deployment uses **no env vars** — everything runs client-side with local state.
+### DeepSeek API integration
+
+The `/api/landing/generate` endpoint uses [DeepSeek's chat completions API](https://api-docs.deepseek.com/) (OpenAI-compatible) to generate complete landing page content:
+
+- **Model**: `deepseek-chat` (latest V3.x)
+- **Endpoint**: `POST https://api.deepseek.com/chat/completions`
+- **Auth**: `Bearer <DEEPSEEK_API_KEY>`
+- **Response format**: `json_object` for reliable JSON parsing
+
+**What it generates** from a product brief:
+- Compelling headline (5-8 words)
+- Subheadline with benefit (10-20 words)
+- 4-5 concrete features
+- CTA button text
+- Suggested price (in EGP)
+
+**Without a key**, the endpoint still works using a local template-based generator — useful for development and demos.
+
+**To enable real AI:**
+1. Get an API key from [platform.deepseek.com/api_keys](https://platform.deepseek.com/api_keys)
+2. Add it to your `.env` as `DEEPSEEK_API_KEY=sk-...`
+3. Restart the dev server
+4. The UI status indicator will switch from "Demo mode" (amber) to "DeepSeek API connected" (green)
+
+> The current deployment uses **only `DATABASE_URL`** — all other features run client-side with local state.
 
 ---
 
