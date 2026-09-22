@@ -38,7 +38,7 @@ export function LoginView() {
           plan: "manage",
           monthlyBudget: 10000,
           erpStatus: "active",
-          erpUrl: "https://demo.garfix-erp.app",
+          erpUrl: "http://localhost:3000/?co=tawfeer",
           createdAt: new Date().toISOString(),
         });
       }

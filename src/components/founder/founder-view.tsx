@@ -16,6 +16,8 @@ import {
   Clock,
   Shield,
   X,
+  Link2,
+  RefreshCw,
 } from "lucide-react";
 import { GarfixLogo } from "@/components/site/logo";
 import { useApp, useDict } from "@/lib/store";
@@ -35,7 +37,7 @@ const SEED_CLIENTS: Client[] = [
     plan: "manage-content",
     monthlyBudget: 25000,
     erpStatus: "active",
-    erpUrl: "https://ahmed.garfix-erp.app",
+    erpUrl: "http://localhost:3000/?co=tawfeer",
     createdAt: "2026-08-12",
   },
   {
@@ -48,7 +50,7 @@ const SEED_CLIENTS: Client[] = [
     plan: "manage",
     monthlyBudget: 12000,
     erpStatus: "active",
-    erpUrl: "https://sara.garfix-erp.app",
+    erpUrl: "http://localhost:3000/?co=mahhal",
     createdAt: "2026-08-25",
   },
   {
@@ -88,6 +90,9 @@ export function FounderView() {
   const addClients = useApp((s) => s.addClients);
   const updateClient = useApp((s) => s.updateClient);
   const loginAs = useApp((s) => s.loginAs);
+  // r-integration: عنوان ERP الأساسي من المتجر (مشترك في كل العملاء)
+  const erpBase = useApp((s) => s.erpBase);
+  const setErpBase = useApp((s) => s.setErpBase);
   const { toast } = useToast();
 
   const [query, setQuery] = useState("");
@@ -95,6 +100,40 @@ export function FounderView() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingErpUrl, setEditingErpUrl] = useState<string | null>(null);
   const [erpUrlDraft, setErpUrlDraft] = useState("");
+
+  // ── r-integration: جلب شركات ERP الحقيقية من النظام الأساسي ──
+  type ErpCompany = { code: string; name: string; nameAr: string; emoji: string };
+  const [erpCompanies, setErpCompanies] = useState<ErpCompany[]>([]);
+  const [erpBaseDraft, setErpBaseDraft] = useState(erpBase);
+  const [erpBusy, setErpBusy] = useState(false);
+
+  const fetchErpCompanies = async (base?: string) => {
+    const b = (base ?? erpBase).replace(/\/+$/, "");
+    if (!b) return;
+    setErpBusy(true);
+    try {
+      const ctl = new AbortController();
+      const timer = setTimeout(() => ctl.abort(), 6000);
+      const res = await fetch(`${b}/api/companies/public`, { signal: ctl.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error(String(res.status));
+      const data = await res.json();
+      const list: ErpCompany[] = Array.isArray(data?.companies) ? data.companies : [];
+      setErpCompanies(list);
+      toast({ title: t.founder.erpSettings.companiesLoaded, description: `${list.length}` });
+    } catch {
+      setErpCompanies([]);
+      toast({ title: t.founder.erpSettings.loadFailed, variant: "destructive" });
+    } finally {
+      setErpBusy(false);
+    }
+  };
+
+  // املأ مسودة الرابط من شركة ERP مختارة: {erpBase}/?co=<code>
+  const pickErpCompany = (code: string) => {
+    if (!code) return;
+    setErpUrlDraft(`${erpBase}/?co=${code}`);
+  };
 
   // Seed on first mount if no clients
   useEffect(() => {
@@ -233,6 +272,63 @@ export function FounderView() {
           />
         </div>
 
+        {/* r-integration: تكامل Garfix ERP — العنوان الأساسي + جلب الشركات */}
+        <div className="rounded-2xl border border-[#BAE6FD] bg-gradient-to-br from-[#F0F9FF] to-white p-4 sm:p-5">
+          <div className="flex flex-col lg:flex-row lg:items-end gap-4">
+            <div className="flex items-center gap-2 lg:w-64 flex-shrink-0">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-[#2563EB]/10 text-[#2563EB]">
+                <Link2 className="h-4 w-4" />
+              </span>
+              <div>
+                <div className="text-sm font-bold text-[#0F172A]">{t.founder.erpSettings.title}</div>
+                <div className="text-[11px] leading-tight text-[#64748B]">{t.founder.erpSettings.baseHint}</div>
+              </div>
+            </div>
+            <div className="flex flex-1 flex-col sm:flex-row gap-2">
+              <input
+                type="url"
+                dir="ltr"
+                value={erpBaseDraft}
+                onChange={(e) => setErpBaseDraft(e.target.value)}
+                placeholder="http://localhost:3000"
+                className="flex-1 rounded-lg border border-[#E2E8F0] bg-white px-3 py-2 text-sm font-mono focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15"
+              />
+              <button
+                onClick={() => {
+                  const b = erpBaseDraft.trim().replace(/\/+$/, "");
+                  setErpBaseDraft(b);
+                  setErpBase(b);
+                  toast({ title: t.founder.erpSettings.saved, description: b });
+                }}
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#0F172A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1E293B] transition-colors"
+              >
+                <Check className="h-4 w-4" />
+                {t.founder.erpSettings.save}
+              </button>
+              <button
+                onClick={() => fetchErpCompanies(erpBaseDraft.trim())}
+                disabled={erpBusy}
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1E40AF] transition-colors disabled:opacity-60"
+              >
+                <RefreshCw className={cn("h-4 w-4", erpBusy && "animate-spin")} />
+                {t.founder.erpSettings.loadCompanies}
+              </button>
+            </div>
+          </div>
+          {erpCompanies.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-[#BAE6FD]/60 pt-3">
+              <span className="text-[11px] font-bold text-[#0F172A]">{t.founder.erpSettings.pickCompany}:</span>
+              {erpCompanies.map((co) => (
+                <span key={co.code} className="inline-flex items-center gap-1 rounded-full bg-white border border-[#E2E8F0] px-2.5 py-1 text-[11px] font-semibold text-[#334155]" dir="auto">
+                  <span>{co.emoji}</span>
+                  <span>{locale === "ar" ? co.nameAr || co.name : co.name}</span>
+                  <code className="text-[10px] text-[#2563EB]" dir="ltr">?co={co.code}</code>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-md">
@@ -299,13 +395,30 @@ export function FounderView() {
                         <div className="space-y-2">
                           <ErpBadge status={c.erpStatus} t={t} />
                           {editingErpUrl === c.id ? (
-                            <div className="flex items-center gap-1">
+                            <div className="space-y-1">
+                              {/* r-integration: منتقي شركة ERP حقيقي — يبني الرابط تلقائياً */}
+                              {erpCompanies.length > 0 && (
+                                <select
+                                  value=""
+                                  onChange={(e) => pickErpCompany(e.target.value)}
+                                  className="w-full rounded-md border border-[#BAE6FD] bg-[#F0F9FF] px-2 py-1 text-[10px] font-semibold text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15"
+                                  dir={locale === "ar" ? "rtl" : "ltr"}
+                                >
+                                  <option value="">{t.founder.erpSettings.pickCompany}</option>
+                                  {erpCompanies.map((co) => (
+                                    <option key={co.code} value={co.code}>
+                                      {co.emoji} {locale === "ar" ? co.nameAr || co.name : co.name} — ?co={co.code}
+                                    </option>
+                                  ))}
+                                </select>
+                              )}
+                              <div className="flex items-center gap-1">
                               <input
                                 type="url"
                                 dir="ltr"
                                 value={erpUrlDraft}
                                 onChange={(e) => setErpUrlDraft(e.target.value)}
-                                placeholder="https://client.garfix-erp.app"
+                                placeholder={`${erpBase}/?co=company`}
                                 className="w-full rounded-md border border-[#2563EB] px-2 py-1 text-[10px] font-mono focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15"
                                 autoFocus
                                 onKeyDown={(e) => {
@@ -327,6 +440,7 @@ export function FounderView() {
                               >
                                 <X className="h-3 w-3" />
                               </button>
+                              </div>
                             </div>
                           ) : (
                             <button

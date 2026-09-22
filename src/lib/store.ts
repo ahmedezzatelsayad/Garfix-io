@@ -98,6 +98,10 @@ type AppState = {
   addInvoice: (clientId: string, invoice: Invoice) => void;
   updateInvoice: (clientId: string, invoiceId: string, patch: Partial<Invoice>) => void;
   deleteInvoice: (clientId: string, invoiceId: string) => void;
+
+  // r-integration: عنوان نظام Garfix ERP الأساسي (يبني عليه رابط كل عميل ?co=<code>)
+  erpBase: string;
+  setErpBase: (url: string) => void;
 };
 
 export const useApp = create<AppState>()(
@@ -106,6 +110,10 @@ export const useApp = create<AppState>()(
       locale: defaultLocale,
       setLocale: (locale) => set({ locale }),
       toggle: () => set({ locale: get().locale === "ar" ? "en" : "ar" }),
+
+      // r-integration: افتراضياً نظام ERP يعمل جنب المنصة (نفس الجهاز: منفذ 3000)
+      erpBase: "http://localhost:3000",
+      setErpBase: (erpBase) => set({ erpBase: erpBase.replace(/\/+$/, "") }),
 
       view: "marketing",
       setView: (view) => set({ view }),
@@ -177,6 +185,7 @@ export const useApp = create<AppState>()(
         locale: s.locale,
         clients: s.clients,
         invoices: s.invoices,
+        erpBase: s.erpBase,
       }),
     }
   )
